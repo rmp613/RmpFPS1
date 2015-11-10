@@ -262,7 +262,7 @@ namespace RmpFPS1.GameObjects
                 jumpPressed = true;
                 jumping = true;
                 if (!Utility.GlobalVariables.Debug)
-                    Velocity.Y += 500;
+                    Velocity.Y += 600;
                 else
                     Velocity.Y += 50;
             }
