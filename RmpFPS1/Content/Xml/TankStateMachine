@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<fsm name="default" startState="Wander">
+
+  <state fromState="Inactive">
+    <transition condition="PlayerNear" toState="Pursue"/>
+    <transition condition="PlayerFar" toState="Wander"/>
+
+  </state>
+
+  <state fromState="Wander">
+    <transition condition="PlayerNear" toState="Pursue"/>
+    <transition condition="Waiting" toState="Inactive"/>
+  </state>
+
+  <state fromState="Pursue">
+    <transition condition="PlayerFar" toState="Wander"/>
+    <transition condition="Waiting" toState="Inactive"/>
+  </state>
+
+</fsm>
