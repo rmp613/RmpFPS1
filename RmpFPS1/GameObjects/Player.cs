@@ -7,7 +7,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Audio;
 
-
 namespace RmpFPS1.GameObjects
 {
     public class Player : GameObject
@@ -26,7 +25,6 @@ namespace RmpFPS1.GameObjects
         public Vector3 Velocity;
         MouseState currentMouse;
         float debugCooldown = 0;
-
 
         public Vector3 Acceleration = new Vector3(0, 0, 0);
         float maxAcceleration = 1000;
@@ -47,7 +45,6 @@ namespace RmpFPS1.GameObjects
         float defaultPlayerHeight;
         public int health = 3;
         public int maxHealth = 3;
-
 
         bool crouching = false;
         public bool isHit = false;
@@ -108,16 +105,20 @@ namespace RmpFPS1.GameObjects
         public override void Impulse(GameObject gameObject)
         {
             isColliding = false;
+            Vector3 impulse = aabb.minimumTranslation(gameObject.aabb);
+
             if (gameObject.type != ObjectType.EnemyProjectile && gameObject.type != ObjectType.PlayerProjectile)
             {
-                position += aabb.minimumTranslation(gameObject.aabb);
+                position += impulse;
                 if (aabb.CollisionNormal == AABB.Normals[3] && !jumpPressed)
                 {
-                    if (position.Y != gameObject.aabb.Max.Y + playerHeight / 2) position.Y = gameObject.aabb.Max.Y + playerHeight / 2;
-                    Velocity *= aabb.ChangeVelocity();
+                    Velocity *= new Vector3(1, aabb.ChangeVelocity().Y, 1);
                     jumping = false;
                     feetColliding = true;
-                }
+                } 
+                Velocity *= new Vector3(aabb.ChangeVelocity().X, 1, aabb.ChangeVelocity().Z);
+                Acceleration *= new Vector3(aabb.ChangeVelocity().X, 1, aabb.ChangeVelocity().Z);
+                
                 isColliding = true;
             }
             if (gameObject.type == ObjectType.EnemyProjectile || gameObject.type == ObjectType.Enemy)
@@ -132,7 +133,6 @@ namespace RmpFPS1.GameObjects
                 {
                     health--;
                     hitBy.Add(gameObject);
-                    Console.Out.WriteLine("hitplayer");
                 }
                 if (gameObject.type == ObjectType.EnemyProjectile)
                 {
@@ -141,7 +141,6 @@ namespace RmpFPS1.GameObjects
                     GameObjectManager.Octree.Remove(gameObject);
                 }
             }
-            
         }
 
         public void EulerIntergrate(float deltaTime)
@@ -153,17 +152,12 @@ namespace RmpFPS1.GameObjects
         }
         private void addAcceleration(float time)
         {
-
             Crouch();
             Sprint();
 
             EulerIntergrate(time);
-            if (isColliding)
+            if (feetColliding)
             {
-                //if(Velocity.X > 0.2f || Velocity.Z > 0.2f)
-                //    moveSound.Play();
-                //else
-                //    moveSound.Stop();
                 Velocity.X *= friction;
                 Velocity.Z *= friction;
             }
@@ -232,8 +226,7 @@ namespace RmpFPS1.GameObjects
             debugCooldown += time;
             if (Keyboard.GetState().IsKeyDown(Keys.W))
             {
-                
-                    Acceleration += playerDir * xzVector;
+                 Acceleration += playerDir * xzVector;
                 
                 //else Acceleration += playerDir * xzVector / 2;
             }
@@ -262,7 +255,7 @@ namespace RmpFPS1.GameObjects
                 jumpPressed = true;
                 jumping = true;
                 if (!Utility.GlobalVariables.Debug)
-                    Velocity.Y += 600;
+                    Velocity.Y += 300;
                 else
                     Velocity.Y += 50;
             }
