@@ -59,7 +59,7 @@ namespace RmpFPS1.GameObjects
                 game.GraphicsDevice,
                 camera);
             //loads map from txt. comment out and uncomment addwalls() and addplatforms() in loadcontent to load the map normally and thereby see all features that dont quite work in txt loaded map
-            loadMap();
+            //loadMap();
         }
         public override void Initialize()
         {
@@ -303,6 +303,8 @@ namespace RmpFPS1.GameObjects
                   camera,
                   game,
                   this);
+            Gun gun = new Gun(Game.Content.Load<Model>(@"Models/Objects/M4A1/M4A1"),
+                player, player.position, player.direction);
             
             //enemyManager = new EnemyManager(
             //    Game.Content.Load<Model>(@"Models/Objects/Cube"),
@@ -327,6 +329,8 @@ namespace RmpFPS1.GameObjects
             //AddPlatforms();
             //AddWalls();
             GlobalVariables.gameObjects.Add(player);
+            GlobalVariables.gameObjects.Add(gun);
+
             //foreach(Tank trex in trexList){
             //    GlobalVariables.gameObjects.Add(trex);
             //}
@@ -338,8 +342,8 @@ namespace RmpFPS1.GameObjects
             if (playerShotTimer >= playerShotCooldown)
             {
                 Projectile playerProj = new Projectile(Game.Content.Load<Model>(@"Models/Objects/Projectile"),
-                    player.position + new Vector3(0, 50, 0) + player.playerDir,
-                    player.playerDir,
+                    player.position + new Vector3(0, 50, 0) + player.direction,
+                    player.direction,
                     this);
                 playerProj.type = GameObject.ObjectType.PlayerProjectile;
                 GlobalVariables.gameObjects.Add(playerProj);

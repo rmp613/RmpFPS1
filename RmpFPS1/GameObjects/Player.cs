@@ -12,7 +12,6 @@ namespace RmpFPS1.GameObjects
     public class Player : GameObject
     {
         public Vector3 playerPos;
-        public Vector3 playerDir { get; protected set; }
         private Vector3 pastPos;
         private Matrix startMin;
         private Matrix startMax;
@@ -82,7 +81,7 @@ namespace RmpFPS1.GameObjects
             camera = ((Game1)game).camera;
 
             position = camera.cameraPos;
-            playerDir = camera.cameraDir;
+            direction = camera.cameraDir;
             camera.cameraPos = position;
             translation.Translation = position;
             Mouse.SetPosition(game.Window.ClientBounds.Width / 2,
@@ -106,8 +105,30 @@ namespace RmpFPS1.GameObjects
 
             if (gameObject.type != ObjectType.EnemyProjectile && gameObject.type != ObjectType.PlayerProjectile)
             {
-                position += impulse; 
+
                 
+                if (aabb.CollisionNormal == AABB.Normals[0] ||
+                    aabb.CollisionNormal == AABB.Normals[1] ||
+                    aabb.CollisionNormal == AABB.Normals[4] ||
+                    aabb.CollisionNormal == AABB.Normals[5] && 
+                    !jumpPressed)
+                { //check xz axis for any "steps" which dont require jumping to surmount
+                    float yDifference = gameObject.aabb.Max.Y - (position.Y - playerHeight / 2);
+                    if (yDifference <= 10f && yDifference > 0)
+                    {
+                        position.Y += yDifference;
+                    }
+                }
+                else //if collision on xz axis and not low enough to step over change velocity according to collision normal
+                {
+
+                    Velocity *= new Vector3(aabb.ChangeVelocity().X, 1, aabb.ChangeVelocity().Z);
+                    Acceleration *= new Vector3(aabb.ChangeVelocity().X, 1, aabb.ChangeVelocity().Z);
+                
+                }
+
+                impulse = aabb.minimumTranslation(gameObject.aabb);
+                position += impulse;
                 if (aabb.CollisionNormal == AABB.Normals[3] && !jumpPressed)
                 {
                     Velocity *= new Vector3(1, aabb.ChangeVelocity().Y, 1);
@@ -117,14 +138,6 @@ namespace RmpFPS1.GameObjects
                     feetColliding = true;
                     Console.Out.WriteLine(position.Y);
                 }
-                float yDifference = gameObject.aabb.Max.Y - (position.Y - playerHeight / 2);
-                if (yDifference <= 10f && yDifference > 0)
-                {
-                    position.Y += yDifference;
-                }
-                Console.Out.WriteLine("after platformclimb: " + position.Y + "yDiff: " + yDifference + "GO max: " + gameObject.aabb.Max.Y + "aabbmin: " + aabb.Min.Y);
-                Velocity *= new Vector3(aabb.ChangeVelocity().X, 1, aabb.ChangeVelocity().Z);
-                Acceleration *= new Vector3(aabb.ChangeVelocity().X, 1, aabb.ChangeVelocity().Z);
                 
                 isColliding = true;
                 
@@ -236,27 +249,27 @@ namespace RmpFPS1.GameObjects
             debugCooldown += time;
             if (Keyboard.GetState().IsKeyDown(Keys.W))
             {
-                 Acceleration += playerDir * xzVector;
+                 Acceleration += direction * xzVector;
                 
                 //else Acceleration += playerDir * xzVector / 2;
             }
             if (Keyboard.GetState().IsKeyDown(Keys.S))
             {
-                 Acceleration -= playerDir * xzVector;
+                Acceleration -= direction * xzVector;
                 
                 //else Acceleration -= playerDir * xzVector / 2;
             }
             if (Keyboard.GetState().IsKeyDown(Keys.A))
             {
-                
-                    Acceleration += Vector3.Cross(cameraUp, playerDir) * xzVector;
+
+                Acceleration += Vector3.Cross(cameraUp, direction) * xzVector;
                 
                 //else Acceleration += Vector3.Cross(cameraUp, playerDir) * xzVector / 2;
             }
             if (Keyboard.GetState().IsKeyDown(Keys.D))
             {
-                
-                    Acceleration -= Vector3.Cross(cameraUp, playerDir) * xzVector;
+
+                Acceleration -= Vector3.Cross(cameraUp, direction) * xzVector;
                 
                 //else Acceleration -= Vector3.Cross(cameraUp, playerDir) * xzVector / 2;
             }
@@ -282,7 +295,7 @@ namespace RmpFPS1.GameObjects
         public override void Update(GameTime gameTime)
         {
             currentMouse = Mouse.GetState();
-            playerDir = camera.cameraDir;
+            direction = camera.cameraDir;
             hitBy.Clear();
             isHit = false;
             time = (float)gameTime.ElapsedGameTime.TotalMilliseconds / 1000;
@@ -291,7 +304,7 @@ namespace RmpFPS1.GameObjects
             addAcceleration(time);
             feetColliding = false;
             jumpPressed = false;
-            rotation = Matrix.CreateFromAxisAngle(new Vector3(0, 1, 0), (float)Math.Atan2(playerDir.X, playerDir.Z));
+            rotation = Matrix.CreateFromAxisAngle(new Vector3(0, 1, 0), (float)Math.Atan2(direction.X, direction.Z));
 
             camera.cameraPos = position + new Vector3(0, playerHeight / 2, 0);
 

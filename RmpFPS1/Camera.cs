@@ -36,7 +36,7 @@ namespace RmpFPS1
             projection = Matrix.CreatePerspectiveFieldOfView(
                 MathHelper.PiOver4,
                (float)Game.Window.ClientBounds.Width / (float)Game.Window.ClientBounds.Height,
-                1, 6000);
+                .00001f, 10000f);
             cameraPos = position;
             YrotationSpeed = 0.2f;
             XrotationSpeed = 0.2f;
