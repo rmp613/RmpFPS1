@@ -16,10 +16,6 @@ namespace RmpFPS1.GameObjects
         private Vector3 pastPos;
         private Matrix startMin;
         private Matrix startMax;
-        private Vector3 maxVelocity = new Vector3(200, 200, 200);
-        private Vector3 defaultMaxVelocity = new Vector3(200, 200, 200);
-        private Vector3 sprintMaxVelocity = new Vector3(350, 200, 350);
-        private Vector3 crouchMaxVelocity = new Vector3(100, 200, 100);
         Vector3 xzVector = new Vector3(1, 0, 1);
         Vector3 cameraUp;
         public Vector3 Velocity;
@@ -30,6 +26,7 @@ namespace RmpFPS1.GameObjects
         float maxAcceleration = 1000;
         float accelerationFactor = 700;
         float deccelerationFactor = 0.7f;
+        float velocityLimiter = 0.97f;
         float defaultDeccelerationFactor = 0.7f;
         float friction = 0.9f;
         float defaultFriction = 0.9f;
@@ -59,7 +56,7 @@ namespace RmpFPS1.GameObjects
         Matrix crouchingScale = Matrix.CreateScale(0.25f, 0.5f, 0.25f);
         public List<AABB> playerBoxes = new List<AABB>();
         Matrix translation = Matrix.Identity;
-        Matrix rotation = Matrix.Identity;
+        public Matrix rotation = Matrix.Identity;
         Matrix[] transforms;
         public Camera camera { get; protected set; }
         MouseState prevMouseState;
@@ -109,17 +106,28 @@ namespace RmpFPS1.GameObjects
 
             if (gameObject.type != ObjectType.EnemyProjectile && gameObject.type != ObjectType.PlayerProjectile)
             {
-                position += impulse;
+                position += impulse; 
+                
                 if (aabb.CollisionNormal == AABB.Normals[3] && !jumpPressed)
                 {
                     Velocity *= new Vector3(1, aabb.ChangeVelocity().Y, 1);
+                    Acceleration *= new Vector3(1, aabb.ChangeVelocity().Y, 1);
+                    position.Y = gameObject.aabb.Max.Y + defaultPlayerHeight/2;
                     jumping = false;
                     feetColliding = true;
-                } 
+                    Console.Out.WriteLine(position.Y);
+                }
+                float yDifference = gameObject.aabb.Max.Y - (position.Y - playerHeight / 2);
+                if (yDifference <= 10f && yDifference > 0)
+                {
+                    position.Y += yDifference;
+                }
+                Console.Out.WriteLine("after platformclimb: " + position.Y + "yDiff: " + yDifference + "GO max: " + gameObject.aabb.Max.Y + "aabbmin: " + aabb.Min.Y);
                 Velocity *= new Vector3(aabb.ChangeVelocity().X, 1, aabb.ChangeVelocity().Z);
                 Acceleration *= new Vector3(aabb.ChangeVelocity().X, 1, aabb.ChangeVelocity().Z);
                 
                 isColliding = true;
+                
             }
             if (gameObject.type == ObjectType.EnemyProjectile || gameObject.type == ObjectType.Enemy)
             {
@@ -166,6 +174,8 @@ namespace RmpFPS1.GameObjects
                 Acceleration.Y = gravity;
                 Acceleration.X = 0;
                 Acceleration.Z = 0;
+                Velocity.X *= velocityLimiter;
+                Velocity.Z *= velocityLimiter;
             }
            
             Acceleration.X *= deccelerationFactor;
@@ -255,7 +265,7 @@ namespace RmpFPS1.GameObjects
                 jumpPressed = true;
                 jumping = true;
                 if (!Utility.GlobalVariables.Debug)
-                    Velocity.Y += 300;
+                    Velocity.Y += 350;
                 else
                     Velocity.Y += 50;
             }

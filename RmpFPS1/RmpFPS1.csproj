@@ -55,6 +55,7 @@
   <ItemGroup>
     <Compile Include="AABB.cs" />
     <Compile Include="Camera.cs" />
+    <Compile Include="GameObjects\Gun.cs" />
     <Compile Include="GameObjects\Collisions.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="GameObjects\GameObject.cs" />

@@ -337,7 +337,7 @@ namespace RmpFPS1.GameObjects
         {
             if (playerShotTimer >= playerShotCooldown)
             {
-                Projectile playerProj = new Projectile(Game.Content.Load<Model>(@"Models/Objects/ammo"),
+                Projectile playerProj = new Projectile(Game.Content.Load<Model>(@"Models/Objects/Projectile"),
                     player.position + new Vector3(0, 50, 0) + player.playerDir,
                     player.playerDir,
                     this);

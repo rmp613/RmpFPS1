@@ -58,7 +58,7 @@ namespace RmpFPS1.GameObjects
             }
             else if (type == ObjectType.Player)
             {
-                Console.Out.WriteLine("hitplayer");
+                //Console.Out.WriteLine("hitplayer");
             }
         }
         public override void Update(GameTime gameTime)
