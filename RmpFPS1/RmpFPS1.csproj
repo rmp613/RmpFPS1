@@ -58,7 +58,7 @@
     <Compile Include="GameObjects\Gun.cs" />
     <Compile Include="GameObjects\Collisions.cs" />
     <Compile Include="Game1.cs" />
-    <Compile Include="GameObjects\GameObject.cs" />
+    <Compile Include="GameObject.cs" />
     <Compile Include="GameObjects\GameObjectManager.cs" />
     <Compile Include="GameObjects\MapObjects\Ground.cs" />
     <Compile Include="GameObjects\MapObjects\Platform.cs" />

@@ -303,7 +303,7 @@ namespace RmpFPS1.GameObjects
                   camera,
                   game,
                   this);
-            Gun gun = new Gun(Game.Content.Load<Model>(@"Models/Objects/M4A1/M4A1"),
+            Gun gun = new Gun(Game.Content.Load<Model>(@"Models/Objects/scar-h"),
                 player, player.position, player.direction);
             
             //enemyManager = new EnemyManager(

@@ -36,8 +36,9 @@ namespace RmpFPS1.GameObjects
             //position = new Vector3(0, 50, 0);
             //rotation = Matrix.Identity;  + new Vector3(0, player.playerHeight/2, 0);new Vector3(50, 0, 0), rotation) + V
             //translation = Matrix.Identity;
-            rotation = player.rotation;
-            position = player.position + Vector3.Transform(new Vector3(0, 0, 100), rotation);
+            position = player.position + Vector3.Transform(new Vector3(0, 50, 10), player.rotation);
+            rotation = Matrix.CreateFromAxisAngle(Vector3.Up, player.rotation.Rotation.Y);
+
             translation.Translation = position;
 
             direction = player.direction;
