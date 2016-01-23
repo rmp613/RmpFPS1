@@ -20,6 +20,9 @@ namespace RmpFPS1.GameObjects
         public Vector3 Velocity;
         MouseState currentMouse;
         float debugCooldown = 0;
+        public float Yaw = 0;
+        public float Pitch = 0;
+        public Matrix totalRotation;
 
         public Vector3 Acceleration = new Vector3(0, 0, 0);
         float maxAcceleration = 1000;
@@ -79,6 +82,8 @@ namespace RmpFPS1.GameObjects
             cameraUp = Vector3.Up;
             type = ObjectType.Player;
             camera = ((Game1)game).camera;
+            Pitch = camera.pitch;
+            Yaw = camera.yaw;
 
             position = camera.cameraPos;
             direction = camera.cameraDir;
@@ -136,7 +141,7 @@ namespace RmpFPS1.GameObjects
                     position.Y = gameObject.aabb.Max.Y + defaultPlayerHeight/2;
                     jumping = false;
                     feetColliding = true;
-                    Console.Out.WriteLine(position.Y);
+                    //Console.Out.WriteLine(position.Y);
                 }
                 
                 isColliding = true;
@@ -308,6 +313,7 @@ namespace RmpFPS1.GameObjects
 
             camera.cameraPos = position + new Vector3(0, playerHeight / 2, 0);
 
+            camera.UpdateCamera(camera.yaw, camera.pitch, camera.cameraPos);
             if (health <= 0)
             {
                 IsActive = false;

@@ -21,6 +21,7 @@ namespace RmpFPS1.GameObjects
         public static List<GameObject> mapObjects = new List<GameObject>();
         int mapChangeCount = 0;
         Player player;
+        Gun gun;
         Ground ground;
         int winGap = 0;
         float playerShotCooldown = 0.3f;
@@ -303,7 +304,7 @@ namespace RmpFPS1.GameObjects
                   camera,
                   game,
                   this);
-            Gun gun = new Gun(Game.Content.Load<Model>(@"Models/Objects/scar-h"),
+            gun = new Gun(Game.Content.Load<Model>(@"Models/Objects/M4A1/Models/M4A1old"),
                 player, player.position, player.direction);
             
             //enemyManager = new EnemyManager(
@@ -342,8 +343,8 @@ namespace RmpFPS1.GameObjects
             if (playerShotTimer >= playerShotCooldown)
             {
                 Projectile playerProj = new Projectile(Game.Content.Load<Model>(@"Models/Objects/Projectile"),
-                    player.position + new Vector3(0, 50, 0) + player.direction,
-                    player.direction,
+                    gun.position + Vector3.Transform(new Vector3(0, 0, -4), gun.rotation),
+                    gun.direction,
                     this);
                 playerProj.type = GameObject.ObjectType.PlayerProjectile;
                 GlobalVariables.gameObjects.Add(playerProj);

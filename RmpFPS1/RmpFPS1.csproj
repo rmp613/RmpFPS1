@@ -89,6 +89,15 @@
     <Content Include="Content\Map\mapInfo.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Models\Objects\M4A1\Models\m4_diff.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Models\Objects\M4A1\Models\m4_nrm.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Models\Objects\M4A1\Models\m4_spec.tga">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Textures\crosshair.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -157,16 +166,21 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Models\Objects\M4A1\M4A1.xnb">
+    <Content Include="Content\Models\Objects\M4A1\Models\m4_diff.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Models\Objects\M4A1\m4_diff.xnb">
+    <Content Include="Content\Models\Objects\M4A1\Models\m4_nrm.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Models\Objects\M4A1\m4_nrm.xnb">
+    <Content Include="Content\Models\Objects\M4A1\Models\m4_spec.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Models\Objects\M4A1\m4_spec.xnb">
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Content\Models\Objects\M4A1\Textures\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\Models\Objects\M4A1\Models\M4A1old.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

@@ -16,8 +16,8 @@ namespace RmpFPS1.GameObjects
     public class Gun : GameObject
     {
         Player player;
-        Matrix rotation = Matrix.Identity;
-        Matrix scale = Matrix.CreateScale(1);
+        public Matrix rotation = Matrix.Identity;
+        Matrix scale = Matrix.CreateScale(.07f);
         Matrix translation = Matrix.Identity;
         public Gun(Model model,
             Player player,
@@ -36,13 +36,22 @@ namespace RmpFPS1.GameObjects
             //position = new Vector3(0, 50, 0);
             //rotation = Matrix.Identity;  + new Vector3(0, player.playerHeight/2, 0);new Vector3(50, 0, 0), rotation) + V
             //translation = Matrix.Identity;
-            position = player.position + Vector3.Transform(new Vector3(0, 50, 10), player.rotation);
-            rotation = Matrix.CreateFromAxisAngle(Vector3.Up, player.rotation.Rotation.Y);
+            if (Mouse.GetState().RightButton == ButtonState.Pressed)
+            {
+                position = player.camera.cameraPos + Vector3.Transform(new Vector3(0.026f, -1.633f, -4), player.camera.rotation);
+            }
+            else
+            {
+                position = player.camera.cameraPos + Vector3.Transform(new Vector3(1.7f, -1.7f, -4), player.camera.rotation);
+            }
 
+            //position = player.camera.cameraPos + Vector3.Transform(new Vector3(-1, player.camera.pitch * 4 - 1.7f, player.camera.pitch*2.5f + 4), player.rotation);
+            rotation = player.camera.rotation;
             translation.Translation = position;
+            //translation.Translation = position + new Vector3(0, player.camera.pitch*5, 0);
 
             direction = player.direction;
-            Console.Out.WriteLine("gunpos:" + position + "playerpos: " + player.position);
+           // Console.Out.WriteLine("gunpos:" + position + "playerpos: " + player.position);
             base.Update(gameTime);
         }
         protected override Matrix GetWorld()

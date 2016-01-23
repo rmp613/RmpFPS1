@@ -47,7 +47,7 @@ namespace RmpFPS1
  
         protected override void Initialize()
         {
-            camera = new Camera(this, new Vector3(0, 100, 0), new Vector3(1, 0, 1), Vector3.Zero, 10);
+            camera = new Camera(this, new Vector3(0, 100, 0), new Vector3(0, 0, -1), 0.2f);
             Components.Add(camera);
 
             gameObjectManager = new GameObjectManager(this, camera);

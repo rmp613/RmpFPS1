@@ -19,18 +19,19 @@ namespace RmpFPS1
         private MouseState currentMouseState;
         private MouseState previousMouseState;
 
-        public float cameraSpeed;
+        public float speed;
         public float xAngle;
         public float yAngle;
         float YrotationSpeed;
         float XrotationSpeed;
-        float yaw = 0;
-        float pitch = 0;
+        public float yaw = 0;
+        public float pitch = 0;
+        public Matrix rotation;
 
         public Matrix view { get; set; }
         public Matrix projection { get; set; }
-
-        public Camera(Game game, Vector3 position, Vector3 target, Vector3 rotation, float speed)
+        Vector3 target;
+        public Camera(Game game, Vector3 position, Vector3 target, float speed)
             : base(game)
         {
             projection = Matrix.CreatePerspectiveFieldOfView(
@@ -38,8 +39,11 @@ namespace RmpFPS1
                (float)Game.Window.ClientBounds.Width / (float)Game.Window.ClientBounds.Height,
                 .00001f, 10000f);
             cameraPos = position;
-            YrotationSpeed = 0.2f;
-            XrotationSpeed = 0.2f;
+            this.speed = speed;
+            YrotationSpeed = speed;
+            XrotationSpeed = speed;
+            this.target = target;
+            rotation = Matrix.CreateFromYawPitchRoll(yaw, pitch, 0);
 
             screenCenter = new Vector2(Game.GraphicsDevice.Viewport.Width, Game.GraphicsDevice.Viewport.Height) / 2;
         }
@@ -47,8 +51,8 @@ namespace RmpFPS1
         public void UpdateCamera(float yaw, float pitch, Vector3 position)
         {
             Matrix cameraRotation = Matrix.CreateRotationX(pitch) * Matrix.CreateRotationY(yaw);
-            Vector3 cameraOriginalTarget = new Vector3(0, 0, -1);
-            Vector3 cameraRotatedTarget = Vector3.Transform(cameraOriginalTarget, cameraRotation);
+            
+            Vector3 cameraRotatedTarget = Vector3.Transform(target, cameraRotation);
             cameraDir = cameraRotatedTarget;
             cameraFinalTarget = position + cameraRotatedTarget;
 
@@ -86,10 +90,13 @@ namespace RmpFPS1
 
             currentMouseState = Mouse.GetState();
             HandleMouse(gameTime);
+            rotation = Matrix.CreateFromYawPitchRoll(yaw, pitch, 0);
+
             UpdateCamera(yaw, pitch, cameraPos);
 
             previousMouseState = currentMouseState;
             base.Update(gameTime);
         }
+
     }
 }
